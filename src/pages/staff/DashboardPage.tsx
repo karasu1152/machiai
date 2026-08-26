@@ -18,6 +18,7 @@ export default function DashboardPage() {
   const [queues, setQueues] = useState<QueueRow[]>([]);
   const [states, setStates] = useState<Record<string, QueueStateRow>>({});
   const [tenantName, setTenantName] = useState('');
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!staff) return;
@@ -46,6 +47,23 @@ export default function DashboardPage() {
     })();
   }, [staff]);
 
+  // FR-213: キューごとにワンタップで受付を開始・停止する。
+  // queues.is_open への直接UPDATEは、一般スタッフでもRLSの staff_toggle_queue
+  // ポリシー(supabase/migrations/20260826000003_rls.sql)で許可されている。
+  // (tickets と違い、queuesの開閉トグルはRPC必須ルールの対象外)
+  async function toggleOpen(q: QueueRow) {
+    if (togglingId) return;
+    setTogglingId(q.id);
+    const nextOpen = !q.is_open;
+    const { error } = await supabase.from('queues').update({ is_open: nextOpen }).eq('id', q.id);
+    if (!error) {
+      setQueues((prev) => prev.map((x) => (x.id === q.id ? { ...x, is_open: nextOpen } : x)));
+    } else {
+      window.alert(`受付状態の切り替えに失敗しました: ${error.message}`);
+    }
+    setTogglingId(null);
+  }
+
   return (
     <div className="min-h-screen p-6">
       <header className="flex items-center justify-between mb-8">
@@ -64,10 +82,9 @@ export default function DashboardPage() {
         {queues.map((q) => {
           const st = states[q.id];
           return (
-            <Link
+            <div
               key={q.id}
-              to={`/staff/q/${q.id}`}
-              className="w-72 rounded-xl border border-neutral-200 bg-white shadow-sm p-5 relative overflow-hidden block"
+              className="w-72 rounded-xl border border-neutral-200 bg-white shadow-sm p-5 relative overflow-hidden"
             >
               <span className="absolute left-0 top-0 bottom-0 w-2" style={{ backgroundColor: q.color }} />
               <div className="pl-2">
@@ -76,11 +93,28 @@ export default function DashboardPage() {
                   <div>待機 {st?.waiting_count ?? 0}組</div>
                   <div>目安 {formatWaitSeconds(st?.estimated_wait_seconds ?? 0, 'ja')}</div>
                   <div>呼出中 {st?.now_serving_number ?? '—'}</div>
-                  <div>{q.is_open ? '● 受付中' : '● 受付停止中'}</div>
                 </div>
-                <div className="mt-4 text-sm font-semibold text-[var(--color-primary)]">管理画面へ →</div>
+
+                <button
+                  onClick={() => void toggleOpen(q)}
+                  disabled={togglingId === q.id}
+                  className={`mt-3 w-full rounded-lg px-3 py-2 text-sm font-semibold transition-colors disabled:opacity-50 ${
+                    q.is_open
+                      ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                      : 'bg-neutral-100 text-neutral-500 hover:bg-neutral-200'
+                  }`}
+                >
+                  {togglingId === q.id ? '切替中…' : q.is_open ? '● 受付中（タップで停止）' : '● 受付停止中（タップで再開）'}
+                </button>
+
+                <Link
+                  to={`/staff/q/${q.id}`}
+                  className="mt-3 block text-sm font-semibold text-[var(--color-primary)]"
+                >
+                  管理画面へ →
+                </Link>
               </div>
-            </Link>
+            </div>
           );
         })}
       </div>
