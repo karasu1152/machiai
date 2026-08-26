@@ -75,3 +75,59 @@ export interface QueueStateRow {
   is_open: boolean;
   updated_at: string;
 }
+
+// ---- スタッフ画面(Phase 3)で使う型 ----
+
+export interface StaffRow {
+  id: string;
+  tenant_id: string;
+  display_name: string;
+  role: 'admin' | 'staff';
+  is_active: boolean;
+}
+
+export interface QueueRow {
+  id: string;
+  tenant_id: string;
+  name: Record<string, string>;
+  color: string;
+  is_open: boolean;
+  long_wait_warn_minutes: number;
+  ask_party_size: boolean;
+  party_size_options: number[];
+  ask_room_number: boolean;
+  ask_seat_preference: boolean;
+  seat_options: { code: string; label: Record<string, string> }[];
+}
+
+export interface CounterRow {
+  id: string;
+  queue_id: string | null;
+  name: Record<string, string>;
+  short_name: string;
+  is_active: boolean;
+}
+
+export interface TicketRow {
+  id: string;
+  display_number: string;
+  status: TicketStatus;
+  party_size: number | null;
+  room_number: string | null;
+  seat_preference: string | null;
+  note: string | null;
+  issued_at: string;
+  called_at: string | null;
+  last_called_at: string | null;
+  called_count: number;
+  counter_id: string | null;
+  sort_key: number;
+  print_status: string;
+}
+
+export interface NoShowTicket {
+  id: string;
+  display_number: string;
+  party_size: number | null;
+  no_show_at: string;
+}

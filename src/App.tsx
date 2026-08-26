@@ -9,9 +9,9 @@ import AnalyticsPage from './pages/staff/AnalyticsPage';
 import QueuesAdminPage from './pages/admin/QueuesAdminPage';
 import PrintersAdminPage from './pages/admin/PrintersAdminPage';
 import StaffAdminPage from './pages/admin/StaffAdminPage';
+import RequireAuth from './components/RequireAuth';
+import RequireAdmin from './components/RequireAdmin';
 
-// NOTE: RequireAuth / RequireAdmin は Phase 3 で実装する。
-// 現時点ではプロトタイプとして全ルートを素通りさせている。
 export default function App() {
   return (
     <Routes>
@@ -19,12 +19,18 @@ export default function App() {
       <Route path="/t/:token" element={<GuestStatusPage />} />
       <Route path="/s/:tenantSlug" element={<SignagePage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/staff" element={<DashboardPage />} />
-      <Route path="/staff/q/:queueId" element={<QueueManagePage />} />
-      <Route path="/staff/analytics" element={<AnalyticsPage />} />
-      <Route path="/admin/queues" element={<QueuesAdminPage />} />
-      <Route path="/admin/printers" element={<PrintersAdminPage />} />
-      <Route path="/admin/staff" element={<StaffAdminPage />} />
+
+      <Route element={<RequireAuth />}>
+        <Route path="/staff" element={<DashboardPage />} />
+        <Route path="/staff/q/:queueId" element={<QueueManagePage />} />
+        <Route path="/staff/analytics" element={<AnalyticsPage />} />
+
+        <Route element={<RequireAdmin />}>
+          <Route path="/admin/queues" element={<QueuesAdminPage />} />
+          <Route path="/admin/printers" element={<PrintersAdminPage />} />
+          <Route path="/admin/staff" element={<StaffAdminPage />} />
+        </Route>
+      </Route>
     </Routes>
   );
 }
