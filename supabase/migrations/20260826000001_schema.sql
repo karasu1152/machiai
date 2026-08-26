@@ -28,7 +28,7 @@ exception when duplicate_object then null; end $$;
 -- ============================================================
 create table if not exists public.tenants (
   id            uuid primary key default gen_random_uuid(),
-  slug          text not null unique,          -- URLに使う識別子 例: 'grand-hotel'
+  slug          text not null unique,          -- URLに使う識別子 例: 'grand-mercure-hamanako'
   name          text not null,                 -- 券面・サイネージに出る施設名
   name_en       text,
   timezone      text not null default 'Asia/Tokyo',

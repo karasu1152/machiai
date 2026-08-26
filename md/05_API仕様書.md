@@ -40,7 +40,7 @@ export const BASE_URL = window.location.origin;
 
 ```typescript
 const { data, error } = await supabase.rpc('get_public_queues', {
-  p_tenant_slug: 'grand-hotel',
+  p_tenant_slug: 'grand-mercure-hamanako',
 });
 ```
 
@@ -134,7 +134,7 @@ const { data } = await supabase.rpc('get_ticket_status', {
   "status": "waiting",
   "queue_id": "2222...",
   "queue_name": {"ja":"レストラン（朝食）"},
-  "tenant_name": "グランドホテル横浜",
+  "tenant_name": "グランドメルキュール浜名湖",
   "locale": "ja",
   "party_size": 2,
   "ahead": 3,

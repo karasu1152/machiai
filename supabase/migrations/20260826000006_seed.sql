@@ -9,7 +9,7 @@
 -- ============================================================
 insert into public.tenants (id, slug, name, name_en, timezone)
 values ('11111111-1111-1111-1111-111111111111',
-        'grand-hotel', 'グランドホテル横浜', 'Grand Hotel Yokohama', 'Asia/Tokyo')
+        'grand-mercure-hamanako', 'グランドメルキュール浜名湖', 'Grand Mercure Hamanako', 'Asia/Tokyo')
 on conflict (slug) do nothing;
 
 insert into public.printers (id, tenant_id, name, mac_address, paper_width)
