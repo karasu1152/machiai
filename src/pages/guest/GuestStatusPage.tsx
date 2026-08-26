@@ -250,7 +250,7 @@ export default function GuestStatusPage() {
         </div>
       </header>
 
-      <div className="text-neutral-500">{t(locale, 'groupsAhead')}</div>
+      <div className="text-neutral-500">{t(locale, 'groupsAheadLabel')}</div>
       <div className="text-2xl font-bold">{data.display_number}</div>
 
       <div className="text-lg text-neutral-500">あと</div>
