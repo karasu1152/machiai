@@ -131,3 +131,22 @@ export interface NoShowTicket {
   party_size: number | null;
   no_show_at: string;
 }
+
+// get_ticket_status の戻り値(05_API仕様書.md 2.3節)
+export interface TicketStatusResult {
+  ok: boolean;
+  error?: 'NOT_FOUND' | 'EXPIRED';
+  display_number?: string;
+  status?: TicketStatus;
+  queue_id?: string;
+  queue_name?: Record<string, string>;
+  tenant_name?: string;
+  locale?: string;
+  party_size?: number | null;
+  ahead?: number;
+  estimated_wait_seconds?: number;
+  called_count?: number;
+  counter_name?: Record<string, string> | null;
+  issued_at?: string;
+  called_at?: string | null;
+}
