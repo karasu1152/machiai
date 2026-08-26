@@ -116,7 +116,7 @@ export const t = (locale: Locale, key: StaticKey): string => {
 };
 
 export const tf = (locale: Locale, key: 'autoReturnNotice', n: number): string =>
-  (dict[locale]?.autoReturnNotice ?? dict.ja.autoReturnNotice)(n);
+  (dict[locale]?.[key] ?? dict.ja[key])(n);
 
 // issue_ticket / RPC が返すエラーコード用
 export const errText = (locale: Locale, code: string): string => {
